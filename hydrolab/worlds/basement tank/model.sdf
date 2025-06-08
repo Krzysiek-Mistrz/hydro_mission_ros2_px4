@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="basin_model">
+    <link name="basin">
+      <inertial>
+        <mass>1</mass>
+      </inertial>
+
+      <!-- Dno: cienki prostokąt o wymiarach 2.0 x 2.0 m -->
+      <collision name="bottom">
+        <pose>0 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.0 2.0 0.01</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="bottom_visual">
+        <pose>0 0 0.005 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.0 2.0 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <!--czerwony kolor-->
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- Lewy bok -->
+      <collision name="left_side">
+        <!-- Pozycja: X = -1.005 (po lewej krawędzi), Y = 0, Z = 0.255 (środek wysokości: 0.5/2 + dno) -->
+        <pose>-1.005 0 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 2.0 0.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="left_side_visual">
+        <pose>-1.005 0 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 2.0 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- Prawy bok -->
+      <collision name="right_side">
+        <pose>1.005 0 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 2.0 0.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="right_side_visual">
+        <pose>1.005 0 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.01 2.0 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- Przedni bok -->
+      <collision name="front_side">
+        <pose>0 -1.005 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.0 0.01 0.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="front_side_visual">
+        <pose>0 -1.005 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.0 0.01 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- Tylny bok -->
+      <collision name="back_side">
+        <pose>0 1.005 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.0 0.01 0.5</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="back_side_visual">
+        <pose>0 1.005 0.255 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>2.0 0.01 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+      </visual>
+
+    </link>
+  </model>
+</sdf>
