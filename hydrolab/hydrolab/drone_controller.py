@@ -26,10 +26,10 @@ class OffboardControl(Node):
         self.pool_sub = self.create_subscription(
             PoseStamped, '/target_pose', self.pool_callback, 10)
         self.camera_info_sub = self.create_subscription(
-            CameraInfo, '/camera/camera/color/camera_info', self.camera_info_callback, 10)
+            CameraInfo, '/world/betterpool/model/x500_mono_cam_down_0/link/camera_link/sensor/imager/camera_info', self.camera_info_callback, 10)
         self.lidar_sub = self.create_subscription(
             LaserScan,
-            '/lidar/distance',
+            '/world/betterpool/model/x500_mono_cam_down_0/link/lidar_sensor_link/sensor/lidar/scan',
             self.lidar_callback,
             qos_profile_sub
         )
@@ -53,7 +53,7 @@ class OffboardControl(Node):
         # 1: punkt A (start, takeoff do 2 m)
         # 2: punkt B (przelot do (10,0,-2))
         # 3: punkt C - pool marker (uśrednione dane)
-        # 4: obnizenie (do 0 m) przy pozycji markera
+        # 4: obnizenie (do 1.5 m) przy pozycji markera
         # 5: wzniesienie (do 2.0 m) przy pozycji markera
         # 6: powrot do punktu A (0,0,-2)
         # 7: ladowanie (0,0,0)
@@ -65,20 +65,13 @@ class OffboardControl(Node):
         self.target_positions = [
             None,
             (0.0, 0.0, -2.0),
-            (10, 0, -2.0),
+            (10.0, 0.0, -2.0),
             None,                  
             None,                  
             None,                  
             (0.0, 0.0, -2.0),      
             (0.0, 0.0,  0.0)       
         ]
-        
-        # Zestaw 1 → Zestaw 2 (w ned):
-        #     ΔX ≈ −24.1 m (na wschód)
-        #     ΔY ≈ +127.7 m (na południe)
-        # Zestaw 2 → Zestaw 3:
-        #     ΔX ≈ +55.3 m (na zachód)
-        #     ΔY ≈ −113.8 m (na północ)
 
         self.timer = self.create_timer(0.1, self.timer_callback)
     
@@ -114,9 +107,6 @@ class OffboardControl(Node):
             distance = math.sqrt(dx * dx + dy * dy + dz * dz)
         
             if distance < self.reach_tolerance:
-                if self.current_state == 4:
-                    self.get_logger().info("Doleciano do z=0 nad pool; czekam 20 s…")
-                    time.sleep(20)
                 # gdy dolecimy do b rozpoczynamy detekcje pozycji aruko
                 if self.current_state == 2:
                     if not self.collecting_pool and not self.pool_collection_done:
@@ -132,17 +122,17 @@ class OffboardControl(Node):
                     elif self.current_state == 3:
                         self.get_logger().info("Osiagnieto PUNKT C (pozycja pool).")
                     elif self.current_state == 4:
-                        self.get_logger().info("Obnizanie do 0 m przy pozycji pool.")
-                        desired_down = 0
+                        self.get_logger().info("Obnizanie do 1.5 m przy pozycji pool.")
+                        desired_down = -1.5
                         if self.current_height is not None:
-                            desired_down = msg.z + (self.current_height - 0)
+                            desired_down = msg.z + (self.current_height - 1.5)
                         self.target_positions[4] = (
                             self.target_positions[3][0],
                             self.target_positions[3][1],
                             desired_down
                         )
                     elif self.current_state == 5:
-                        self.get_logger().info("Wznoszenie do 2.0 m przy p 0 pozycji pool.")
+                        self.get_logger().info("Wznoszenie do 2.0 m przy pozycji pool.")
                         desired_up = -2.0
                         if self.current_height is not None:
                             desired_up = msg.z + (self.current_height - 2.0)
@@ -198,7 +188,7 @@ class OffboardControl(Node):
                 global_marker_y = current_y + Y_offset
 
                 self.target_positions[3] = (global_marker_x, global_marker_y, -2.0)
-                self.target_positions[4] = (global_marker_x, global_marker_y, 0)
+                self.target_positions[4] = (global_marker_x, global_marker_y, -1.5)
                 self.target_positions[5] = (global_marker_x, global_marker_y, -2.0)
                 
                 self.pool_collection_done = True

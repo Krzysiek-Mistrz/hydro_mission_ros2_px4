@@ -31,13 +31,13 @@ class ArucoTrackerNode(Node):
         # subskrypcje
         self.image_sub = self.create_subscription(
             Image,
-            '/camera/camera/color/image_raw',
+            '/world/betteraruco/model/x500_mono_cam_down_0/link/camera_link/sensor/imager/image',
             self.image_callback,
             10
         )
         self.camera_info_sub = self.create_subscription(
             CameraInfo,
-            '/camera/camera/color/camera_info',
+            '/world/betteraruco/model/x500_mono_cam_down_0/link/camera_link/sensor/imager/camera_info',
             self.camera_info_callback,
             10
         )
